@@ -1,0 +1,33 @@
+#!/bin/bash
+set -e
+
+cd /taiga/back
+
+echo "Collecting static files..."
+python manage.py collectstatic --noinput --clear
+
+echo "Compiling localization files for ${LOCALE:=en-us}..."
+python manage.py compilemessages --locale $LOCALE
+
+echo "Waiting for database to come online..."
+while ! nc -z ${POSTGRES_ADDR:-postgres} 5432; do
+  sleep 1
+  printf .
+done
+
+echo "Migrating database..."
+python manage.py migrate --noinput
+
+# load initial data if DB haven't been initialized
+if [ ! -f /taiga/logs/db_init ]; then
+    echo "Loading initial data..."
+    python manage.py loaddata initial_user
+    python manage.py loaddata initial_project_templates
+    python manage.py loaddata initial_role
+    touch /taiga/logs/db_init
+fi
+
+chown -R taiga /taiga/
+
+echo "Starting circus"
+/usr/local/bin/circusd /taiga/circus.ini

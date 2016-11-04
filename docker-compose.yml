@@ -1,0 +1,45 @@
+---
+version: '2'
+
+services:
+
+  taiga-db:
+    image: postgres:9.6
+    expose:
+      - "5432"
+    networks:
+      - taiga-net
+    volumes:
+      - taiga_db_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: taiga
+      POSTGRES_PASSWORD: password
+
+  taiga-back:
+    image: gangefors/docker-taiga-back
+    ports:
+      - "8000:8000"
+    networks:
+      - taiga-net
+    links:
+      - taiga-db:postgres
+    volumes:
+      - taiga_back_logs:/taiga/logs/
+      - taiga_back_media:/taiga/media/
+      - taiga_back_static:/taiga/static/
+    environment:
+      LOCALE: en-US
+
+volumes:
+  taiga_db_data:
+    driver: local
+  taiga_back_logs:
+    driver: local
+  taiga_back_media:
+    driver: local
+  taiga_back_static:
+    driver: local
+
+networks:
+  taiga-net:
+    driver: bridge
