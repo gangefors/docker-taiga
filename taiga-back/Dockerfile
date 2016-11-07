@@ -26,7 +26,7 @@ RUN buildDeps=' \
 # Clone and install taiga-back requirements
     && git clone https://github.com/taigaio/taiga-back.git /taiga/back \
     && cd /taiga/back \
-    && git checkout -b $TAIGA_BACK_VERSION tags/$TAIGA_BACK_VERSION \
+    && git checkout $TAIGA_BACK_VERSION \
     && pip install --no-cache-dir -r requirements.txt \
     && pip install --no-cache-dir circus gunicorn \
 # Remove build dependencies
