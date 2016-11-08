@@ -1,9 +1,9 @@
-FROM python:3-slim
+FROM python:3.5-slim
 MAINTAINER Stefan Gangefors <stefan@gangefors.com>
 
 ARG TAIGA_BACK_VERSION=3.0.0
 
-# Install build dependencies
+# Install build and runtime dependencies
 RUN buildDeps=' \
         build-essential \
         git \
@@ -33,21 +33,17 @@ RUN buildDeps=' \
     && apt-get purge -y --auto-remove $buildDeps \
     && rm -rf /var/lib/apt/lists/*
 
+# Configure taiga-back
+WORKDIR /taiga
+RUN mkdir -p logs media static
+COPY local.py /taiga/back/settings/local.py
+COPY circus.ini /taiga/circus.ini
+COPY init /taiga/init
+
 VOLUME /taiga/logs
 VOLUME /taiga/media
 VOLUME /taiga/static
 
 EXPOSE 8000
-
-WORKDIR /taiga
-
-# Install and configure taiga-back
-RUN mkdir -p \
-        /taiga/logs \
-        /taiga/media \
-        /taiga/static
-COPY local.py /taiga/back/settings/local.py
-COPY circus.ini /taiga/circus.ini
-COPY init /taiga/init
 
 CMD ["./init"]
