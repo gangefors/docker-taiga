@@ -16,7 +16,7 @@ services:
       POSTGRES_PASSWORD: password
 
   taiga-back:
-    image: gangefors/docker-taiga-back
+    image: gangefors/taiga-back
     ports:
       - "8000:8000"
     networks:
@@ -28,7 +28,22 @@ services:
       - taiga_back_media:/taiga/media/
       - taiga_back_static:/taiga/static/
     environment:
-      LOCALE: en-US
+      DEBUG: "true"
+
+  taiga-front:
+    image: gangefors/taiga-front
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - taiga-net
+    links:
+      - taiga-back:taiga-back
+    volumes:
+      - taiga_back_media:/taiga/media/
+      - taiga_back_static:/taiga/static/
+    environment:
+      DEBUG: "true"
 
 volumes:
   taiga_db_data:

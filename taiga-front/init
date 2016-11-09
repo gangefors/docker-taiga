@@ -1,0 +1,36 @@
+#!/bin/sh
+
+# Configure taiga front
+cat > /taiga/front/dist/conf.json <<EOL
+{
+  "api": "/api/v1/",
+  "eventsUrl": null,
+  "eventsMaxMissedHeartbeats": 5,
+  "eventsHeartbeatIntervalTime": 60000,
+  "eventsReconnectTryInterval": 10000,
+  "debug": ${DEBUG:-false},
+  "debugInfo": false,
+  "defaultLanguage": "${LANGUAGE:-en}",
+  "themes": ["taiga"],
+  "defaultTheme": "taiga",
+  "publicRegisterEnabled": ${PUBLIC_REGISTER_ENABLED:-true},
+  "feedbackEnabled": ${FEEDBACK_ENABLED:-true},
+  "privacyPolicyUrl": null,
+  "termsOfServiceUrl": null,
+  "maxUploadFileSize": null,
+  "contribPlugins": [],
+  "tribeHost": null,
+  "gravatar": ${USE_GRAVATAR:-true}
+}
+EOL
+
+# Get site conf
+SITE_CONF=${FRONT_SCHEME:-http}.conf
+
+# Disable all sites
+rm -f /etc/nginx/sites-enabled/*
+
+# Enable configured site
+ln -sf /etc/nginx/sites-available/${SITE_CONF} /etc/nginx/sites-enabled/
+
+nginx -g "daemon off;"
