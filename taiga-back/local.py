@@ -17,7 +17,7 @@ ADMINS = (
 )
 
 DEBUG = getenv("DEBUG", False)
-TEMPLATE_DEBUG = getenv("TEMPLATE_DEBUG", DEBUG)
+TEMPLATES[0]['OPTIONS']['debug'] = getenv("TEMPLATE_DEBUG", DEBUG)
 
 DATABASES = {
     "default": {
@@ -32,13 +32,13 @@ DATABASES = {
 
 API_SCHEME = getenv("API_SCHEME", "http")
 API_DOMAIN = getenv("API_DOMAIN", HOSTNAME + ":8000")
-API_NAME = getenv("API_NAME", "api")
 API_URI = API_SCHEME + API_DOMAIN
+API_NAME = "api"
 
 FRONT_SCHEME = getenv("FRONT_SCHEME", "http")
 FRONT_DOMAIN = getenv("FRONT_DOMAIN", HOSTNAME + ":9001")
-FRONT_NAME = getenv("FRONT_NAME", "front")
 FRONT_URI = FRONT_SCHEME + FRONT_DOMAIN
+FRONT_NAME = "front"
 
 SITES = {
    "api": {

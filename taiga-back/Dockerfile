@@ -34,8 +34,7 @@ RUN buildDeps=' \
     && rm -rf /var/lib/apt/lists/*
 
 # Configure taiga-back
-WORKDIR /taiga
-RUN mkdir -p logs media static
+RUN mkdir -p /taiga/logs /taiga/media /taiga/static
 COPY local.py /taiga/back/settings/local.py
 COPY circus.ini /taiga/circus.ini
 COPY init /taiga/init
@@ -46,4 +45,4 @@ VOLUME /taiga/static
 
 EXPOSE 8000
 
-CMD ["./init"]
+CMD ["/taiga/init"]
