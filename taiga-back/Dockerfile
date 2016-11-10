@@ -1,7 +1,7 @@
 FROM python:3.5-slim
 MAINTAINER Stefan Gangefors <stefan@gangefors.com>
 
-ARG TAIGA_BACK_VERSION=3.0.0
+ARG TAIGA_VERSION=3.0.0
 
 # Install build and runtime dependencies
 RUN buildDeps=' \

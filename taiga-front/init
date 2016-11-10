@@ -28,9 +28,9 @@ EOL
 SITE_CONF=${FRONT_SCHEME:-http}.conf
 
 # Disable all sites
-rm -f /etc/nginx/sites-enabled/*
+rm -f /etc/nginx/conf.d/*
 
 # Enable configured site
-ln -sf /etc/nginx/sites-available/${SITE_CONF} /etc/nginx/sites-enabled/
+ln -sf /etc/nginx/${SITE_CONF} /etc/nginx/conf.d/
 
 nginx -g "daemon off;"

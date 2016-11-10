@@ -28,7 +28,7 @@ services:
       - taiga_back_media:/taiga/media/
       - taiga_back_static:/taiga/static/
     environment:
-      DEBUG: "true"
+      DEBUG: "True"
 
   taiga-front:
     image: gangefors/taiga-front
@@ -40,6 +40,7 @@ services:
     links:
       - taiga-back:taiga-back
     volumes:
+      - taiga_back_logs:/taiga/logs/
       - taiga_back_media:/taiga/media/
       - taiga_back_static:/taiga/static/
     environment:
