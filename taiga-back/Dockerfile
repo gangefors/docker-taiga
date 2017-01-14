@@ -1,7 +1,7 @@
 FROM python:3.5-slim
 MAINTAINER Stefan Gangefors <stefan@gangefors.com>
 
-ARG TAIGA_VERSION=3.0.0
+ARG VERSION_REV=stable
 
 # Install build and runtime dependencies
 RUN buildDeps=' \
@@ -26,7 +26,7 @@ RUN buildDeps=' \
 # Clone and install taiga-back requirements
     && git clone https://github.com/taigaio/taiga-back.git /taiga/back \
     && cd /taiga/back \
-    && git checkout $TAIGA_BACK_VERSION \
+    && git checkout $VERSION_REV \
     && pip install --no-cache-dir -r requirements.txt \
     && pip install --no-cache-dir circus gunicorn \
 # Remove build dependencies

@@ -1,5 +1,5 @@
 ---
-version: '2'
+version: '2.1'
 
 services:
 
@@ -12,13 +12,16 @@ services:
     volumes:
       - taiga_db_data:/var/lib/postgresql/data
     environment:
-      POSTGRES_USER: taiga
-      POSTGRES_PASSWORD: password
+      POSTGRES_USER: "${DB_USER:-taiga}"
+      POSTGRES_PASSWORD: "${DB_PASSWORD:-taiga}"
+      POSTGRES_DB: "${DB_NAME:-taiga}"
 
   taiga-back:
     image: gangefors/taiga-back
+    build:
+      context: taiga-back
     ports:
-      - "8000:8000"
+      - "8000"
     networks:
       - taiga-net
     links:
@@ -28,10 +31,36 @@ services:
       - taiga_back_media:/taiga/media/
       - taiga_back_static:/taiga/static/
     environment:
-      DEBUG: "True"
+      DEBUG: "${DEBUG}"
+      TEMPLATE_DEBUG: "${TEMPLATE_DEBUG}"
+      DB_NAME: "${DB_NAME}"
+      DB_USER: "${DB_USER}"
+      DB_PASSWORD: "${DB_PASSWORD}"
+      DB_HOST: "${DB_HOST}"
+      DB_PORT: "${DB_PORT}"
+      API_SCHEME: "${API_SCHEME}"
+      API_DOMAIN: "${API_DOMAIN}"
+      FRONT_SCHEME: "${FRONT_SCHEME}"
+      FRONT_DOMAIN: "${FRONT_DOMAIN}"
+      TIME_ZONE: "${TIME_ZONE}"
+      LOCALE: "${LOCALE}"
+      SECRET_KEY: "${SECRET_KEY}"
+      DEFAULT_FROM_EMAIL: "${DEFAULT_FROM_EMAIL}"
+      SERVER_EMAIL: "${SERVER_EMAIL}"
+      EMAIL_USE_TLS: "${EMAIL_USE_TLS}"
+      EMAIL_HOST: "${EMAIL_HOST}"
+      EMAIL_PORT: "${EMAIL_PORT}"
+      EMAIL_HOST_USER: "${EMAIL_HOST_USER}"
+      EMAIL_HOST_PASSWORD: "${EMAIL_HOST_PASSWORD}"
+      PUBLIC_REGISTER_ENABLED: "${PUBLIC_REGISTER_ENABLED}"
+      FEEDBACK_ENABLED: "${FEEDBACK_ENABLED}"
+      FEEDBACK_EMAIL: "${FEEDBACK_EMAIL}"
+      STATS_ENABLED: "${STATS_ENABLED}"
 
   taiga-front:
     image: gangefors/taiga-front
+    build:
+      context: taiga-front
     ports:
       - "80:80"
       - "443:443"
@@ -44,7 +73,13 @@ services:
       - taiga_back_media:/taiga/media/
       - taiga_back_static:/taiga/static/
     environment:
-      DEBUG: "true"
+      API_URL: "${API_URL}"
+      DEBUG: "${DEBUG}"
+      FEEDBACK_ENABLED: "${FEEDBACK_ENABLED}"
+      FRONT_SCHEME: "${FRONT_SCHEME}"
+      FRONT_LANGUAGE: "${FRONT_LANGUAGE}"
+      PUBLIC_REGISTER_ENABLED: "${PUBLIC_REGISTER_ENABLED}"
+      USE_GRAVATAR: "${USE_GRAVATAR}"
 
 volumes:
   taiga_db_data:

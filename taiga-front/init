@@ -3,14 +3,14 @@
 # Configure taiga front
 cat > /taiga/front/dist/conf.json <<EOL
 {
-  "api": "/api/v1/",
+  "api": "${API_URL:-/api/v1/}",
   "eventsUrl": null,
   "eventsMaxMissedHeartbeats": 5,
   "eventsHeartbeatIntervalTime": 60000,
   "eventsReconnectTryInterval": 10000,
   "debug": ${DEBUG:-false},
   "debugInfo": false,
-  "defaultLanguage": "${LANGUAGE:-en}",
+  "defaultLanguage": "${FRONT_LANGUAGE:-en}",
   "themes": ["taiga"],
   "defaultTheme": "taiga",
   "publicRegisterEnabled": ${PUBLIC_REGISTER_ENABLED:-true},
@@ -26,6 +26,14 @@ EOL
 
 # Get site conf
 SITE_CONF=${FRONT_SCHEME:-http}.conf
+
+# Generate self-signed certificates
+if [ "$FRONT_SCHEME" = "https" -a ! -f /etc/ssl/client.key ]; then
+    openssl req -subj "/C=/ST=/L=/O=/CN=${HOSTNAME:-localhost}" \
+        -x509 -nodes -days 365 -newkey rsa:2048 \
+        -keyout /etc/ssl/cert.key \
+        -out /etc/ssl/cert.crt
+fi
 
 # Disable all sites
 rm -f /etc/nginx/conf.d/*

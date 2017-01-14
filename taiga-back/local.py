@@ -1,6 +1,16 @@
-from os import getenv
+from os import getenv as ge
 
 from .common import *
+
+
+def getenv(env, default=''):
+    """Return env var if set and not empty, otherwise default.
+
+       Also convert 'true'/'false' to bool values."""
+    got_env = ge(env)
+    got_env = False if got_env == 'false' else got_env
+    got_env = True if got_env == 'true' else got_env
+    return default if got_env is None or got_env == "" else ge(env)
 
 
 #########################################
@@ -8,13 +18,6 @@ from .common import *
 #########################################
 
 HOSTNAME = getenv("HOSTNAME", "localhost")
-
-ADMINS = (
-    (
-        getenv("TAIGA_ADMIN", "Admin"),
-        getenv("TAIGA_ADMIN_EMAIL", "admin@" + HOSTNAME)
-    ),
-)
 
 DEBUG = getenv("DEBUG", False)
 TEMPLATES[0]['OPTIONS']['debug'] = getenv("TEMPLATE_DEBUG", DEBUG)
@@ -24,7 +27,7 @@ DATABASES = {
         "ENGINE": "django.db.backends.postgresql",
         'NAME': getenv("DB_NAME", "taiga"),
         'USER': getenv("DB_USER", "taiga"),
-        'PASSWORD': getenv("DB_PASSWORD", "password"),
+        'PASSWORD': getenv("DB_PASSWORD", "taiga"),
         'HOST': getenv("DB_HOST", "postgres"),
         'PORT': getenv("DB_PORT", "5432"),
     }
@@ -72,7 +75,7 @@ STATIC_ROOT = "/taiga/static"
 MEDIA_URL = FRONT_URI + "/media/"
 STATIC_URL = FRONT_URI + "/static/"
 
-ADMIN_MEDIA_PREFIX = getenv("ADMIN_MEDIA_PREFIX", STATIC_URL + "/admin/")
+ADMIN_MEDIA_PREFIX = STATIC_URL + "/admin/"
 
 SECRET_KEY = getenv("SECRET_KEY", "theveryultratopsecretkey")
 
