@@ -1,26 +1,26 @@
 from os import getenv as ge
+from typing import Any
 
 from .common import *
 
 
-def getenv(env, default=''):
+def getenv(env: str, default: Any) -> str:
     """Return env var if set and not empty, otherwise default.
 
        Also convert 'true'/'false' to bool values."""
     got_env = ge(env)
-    got_env = False if got_env == 'false' else got_env
-    got_env = True if got_env == 'true' else got_env
+    got_env = False if got_env.lower() == "false" else got_env
+    got_env = True if got_env.lower() == "true" else got_env
     return default if got_env is None or got_env == "" else ge(env)
 
 
 #########################################
-## GENERIC
+# GENERIC
 #########################################
 
 HOSTNAME = getenv("HOSTNAME", "localhost")
 
 DEBUG = getenv("DEBUG", False)
-TEMPLATES[0]['OPTIONS']['debug'] = getenv("TEMPLATE_DEBUG", DEBUG)
 
 DATABASES = {
     "default": {
@@ -33,37 +33,21 @@ DATABASES = {
     }
 }
 
-API_SCHEME = getenv("API_SCHEME", "http")
-API_DOMAIN = getenv("API_DOMAIN", HOSTNAME + ":8000")
-API_URI = API_SCHEME + API_DOMAIN
-API_NAME = "api"
-
-FRONT_SCHEME = getenv("FRONT_SCHEME", "http")
+FRONT_SCHEME = getenv("FRONT_SCHEME", "https")
 FRONT_DOMAIN = getenv("FRONT_DOMAIN", HOSTNAME + ":9001")
 FRONT_URI = FRONT_SCHEME + FRONT_DOMAIN
-FRONT_NAME = "front"
 
-SITES = {
-   "api": {
-      "scheme": API_SCHEME,
-      "domain": API_DOMAIN,
-      "name": API_NAME,
-   },
-   "front": {
-      "scheme": FRONT_SCHEME,
-      "domain": FRONT_DOMAIN,
-      "name": FRONT_NAME,
-   },
-}
-
-SITE_ID = API_NAME
+SITES["api"]["scheme"] = getenv("API_SCHEME", "http")
+SITES["api"]["domain"] = getenv("API_DOMAIN", HOSTNAME + ":8000")
+SITES["front"]["scheme"] = FRONT_SCHEME
+SITES["front"]["domain"] = FRONT_DOMAIN
 
 TIME_ZONE = getenv("TIME_ZONE", "UTC")
 USE_TZ = True
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = getenv("LOCALE", 'en-us')
+LANGUAGE_CODE = getenv("LANGUAGE_CODE", "en-us")
 
 # Static configuration.
 MEDIA_ROOT = "/taiga/media"
@@ -77,101 +61,37 @@ STATIC_URL = FRONT_URI + "/static/"
 
 ADMIN_MEDIA_PREFIX = STATIC_URL + "/admin/"
 
-SECRET_KEY = getenv("SECRET_KEY", "theveryultratopsecretkey")
+SECRET_KEY = getenv("SECRET_KEY", "secretkey")
 
 
 #########################################
-## THROTTLING
-#########################################
-
-#REST_FRAMEWORK["DEFAULT_THROTTLE_RATES"] = {
-#    "anon": "20/min",
-#    "user": "200/min",
-#    "import-mode": "20/sec",
-#    "import-dump-mode": "1/minute"
-#}
-
-
-#########################################
-## MAIL SYSTEM SETTINGS
+# MAIL SYSTEM SETTINGS
 #########################################
 
 DEFAULT_FROM_EMAIL = getenv("DEFAULT_FROM_EMAIL", "no-reply@" + HOSTNAME)
 SERVER_EMAIL = getenv("SERVER_EMAIL", DEFAULT_FROM_EMAIL)
-#CHANGE_NOTIFICATIONS_MIN_INTERVAL = 300  #seconds
-
-# EMAIL SETTINGS EXAMPLE
-#EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = getenv("EMAIL_USE_TLS", False)
 EMAIL_HOST = getenv("EMAIL_HOST", HOSTNAME)
 EMAIL_PORT = getenv("EMAIL_PORT", 25)
 EMAIL_HOST_USER = getenv("EMAIL_HOST_USER", "")
 EMAIL_HOST_PASSWORD = getenv("EMAIL_HOST_PASSWORD", "")
 
-# GMAIL SETTINGS EXAMPLE
-#EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-#EMAIL_USE_TLS = True
-#EMAIL_HOST = 'smtp.gmail.com'
-#EMAIL_PORT = 587
-#EMAIL_HOST_USER = 'youremail@gmail.com'
-#EMAIL_HOST_PASSWORD = 'yourpassword'
-
 
 #########################################
-## REGISTRATION
+# REGISTRATION
 #########################################
 
 PUBLIC_REGISTER_ENABLED = getenv("PUBLIC_REGISTER_ENABLED", True)
 
 # LIMIT ALLOWED DOMAINS FOR REGISTER AND INVITE
 # None or [] values in USER_EMAIL_ALLOWED_DOMAINS means allow any domain
-#USER_EMAIL_ALLOWED_DOMAINS = None
-
-# PUCLIC OR PRIVATE NUMBER OF PROJECT PER USER
-#MAX_PRIVATE_PROJECTS_PER_USER = None  # None == no limit
-#MAX_PUBLIC_PROJECTS_PER_USER = None  # None == no limit
-#MAX_MEMBERSHIPS_PRIVATE_PROJECTS = None  # None == no limit
-#MAX_MEMBERSHIPS_PUBLIC_PROJECTS = None  # None == no limit
-
-# GITHUB SETTINGS
-#GITHUB_URL = "https://github.com/"
-#GITHUB_API_URL = "https://api.github.com/"
-#GITHUB_API_CLIENT_ID = "yourgithubclientid"
-#GITHUB_API_CLIENT_SECRET = "yourgithubclientsecret"
+USER_EMAIL_ALLOWED_DOMAINS = getenv("USER_EMAIL_ALLOWED_DOMAINS", "").split()
 
 
 #########################################
-## SITEMAP
-#########################################
-
-# If is True /front/sitemap.xml show a valid sitemap of taiga-front client
-#FRONT_SITEMAP_ENABLED = False
-#FRONT_SITEMAP_CACHE_TIMEOUT = 24*60*60  # In second
-
-
-#########################################
-## FEEDBACK
+# FEEDBACK
 #########################################
 
 # Note: See config in taiga-front too
-FEEDBACK_ENABLED = getenv("FEEDBACK_ENABLED", True)
+FEEDBACK_ENABLED = getenv("FEEDBACK_ENABLED", False)
 FEEDBACK_EMAIL = getenv("FEEDBACK_EMAIL", "support@taiga.io")
-
-
-#########################################
-## STATS
-#########################################
-
-STATS_ENABLED = getenv("STATS_ENABLED", False)
-
-
-#########################################
-## CELERY
-#########################################
-
-#from .celery import *
-#CELERY_ENABLED = True
-#
-# To use celery in memory
-#CELERY_ENABLED = True
-#CELERY_ALWAYS_EAGER = True

@@ -14,7 +14,7 @@ cat > /taiga/front/dist/conf.json <<EOL
   "themes": ["taiga"],
   "defaultTheme": "taiga",
   "publicRegisterEnabled": ${PUBLIC_REGISTER_ENABLED:-true},
-  "feedbackEnabled": ${FEEDBACK_ENABLED:-true},
+  "feedbackEnabled": ${FEEDBACK_ENABLED:-false},
   "privacyPolicyUrl": null,
   "termsOfServiceUrl": null,
   "maxUploadFileSize": null,
@@ -25,7 +25,7 @@ cat > /taiga/front/dist/conf.json <<EOL
 EOL
 
 # Get site conf
-SITE_CONF=${FRONT_SCHEME:-http}.conf
+SITE_CONF=${FRONT_SCHEME:-https}.conf
 
 # Generate self-signed certificates
 if [ "$FRONT_SCHEME" = "https" -a ! -f /etc/ssl/client.key ]; then

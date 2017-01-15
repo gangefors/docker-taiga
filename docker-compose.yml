@@ -30,9 +30,9 @@ services:
       - taiga_back_logs:/taiga/logs/
       - taiga_back_media:/taiga/media/
       - taiga_back_static:/taiga/static/
+    hostname: "${HOSTNAME:-localhost}"
     environment:
       DEBUG: "${DEBUG}"
-      TEMPLATE_DEBUG: "${TEMPLATE_DEBUG}"
       DB_NAME: "${DB_NAME}"
       DB_USER: "${DB_USER}"
       DB_PASSWORD: "${DB_PASSWORD}"
@@ -62,8 +62,8 @@ services:
     build:
       context: taiga-front
     ports:
-      - "80:80"
-      - "443:443"
+      - "${HTTP_PORT:-80}:80"
+      - "${HTTPS_PORT:-443}:443"
     networks:
       - taiga-net
     links:
@@ -72,6 +72,7 @@ services:
       - taiga_back_logs:/taiga/logs/
       - taiga_back_media:/taiga/media/
       - taiga_back_static:/taiga/static/
+    hostname: "${HOSTNAME:-localhost}"
     environment:
       API_URL: "${API_URL}"
       DEBUG: "${DEBUG}"
