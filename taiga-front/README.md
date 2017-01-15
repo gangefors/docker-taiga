@@ -8,6 +8,8 @@ Use this Docker image to launch an instance of the Taiga frontend.
 This will also launch the database and backend container. Use `--no-deps` to
 ignore those dependency.
 
+You can find a built version of this at [Docker hub][1].
+
 
 Volumes
 -------
@@ -78,3 +80,6 @@ Environment
 - `HTTPS_PORT`, default: 443
 
   HTTPS port exposed by the frontend. Only needed with docker-compose.
+
+
+[1]: https://hub.docker.com/r/gangefors/taiga-front

@@ -8,6 +8,9 @@ Use this Docker image to launch an instance of the Taiga backend.
 This will also launch the database container. Use `--no-deps` to ignore that
 dependency.
 
+You can find a built version of this at [Docker hub][3].
+
+
 Volumes
 -------
 
@@ -161,3 +164,4 @@ See the Django settings [documentation][2] for more info.
 
 [1]: ../docker-compose.yml
 [2]: https://docs.djangoproject.com/en/dev/ref/settings/
+[3]: https://hub.docker.com/r/gangefors/taiga-back
