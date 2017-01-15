@@ -78,6 +78,3 @@ Environment
 - `HTTPS_PORT`, default: 443
 
   HTTPS port exposed by the frontend. Only needed with docker-compose.
-
-
-[1]: https://docs.djangoproject.com/en/dev/ref/settings/

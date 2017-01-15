@@ -13,7 +13,7 @@ Volumes
 
 - `/var/lib/postgresql/data`
 
-  Database files. Used by taiga-db service. See the [docker-compose.yml](1)
+  Database files. Used by taiga-db service. See the [docker-compose.yml][1]
   file for details.
 
 - `/taiga/logs/`
@@ -84,7 +84,7 @@ Environment
 
 ### Django settings
 
-See the Django settings [documentation](1) for more info.
+See the Django settings [documentation][2] for more info.
 
 - `DEBUG`, default: false
 
