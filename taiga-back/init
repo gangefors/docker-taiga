@@ -6,11 +6,11 @@ cd /taiga/back
 echo "Collecting static files..."
 python manage.py collectstatic --noinput --clear
 
-echo "Compiling localization files for ${LANGUAGE_CODE:-en-us}..."
-python manage.py compilemessages -l ${LANGUAGE_CODE:-en-us}
+echo "Compiling localization files for ${LANGUAGE_CODE:=en-us}..."
+python manage.py compilemessages -l ${LANGUAGE_CODE:?}
 
 echo "Waiting for database to come online..."
-while ! nc -z ${POSTGRES_ADDR:-postgres} 5432; do
+while ! nc -z ${DB_HOST:-taiga-db} ${DB_PORT:-5432}; do
   sleep 1
   printf .
 done

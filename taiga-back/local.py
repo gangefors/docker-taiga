@@ -9,9 +9,9 @@ def getenv(env: str, default: Any) -> str:
 
        Also convert 'true'/'false' to bool values."""
     got_env = ge(env)
-    got_env = False if got_env.lower() == "false" else got_env
-    got_env = True if got_env.lower() == "true" else got_env
-    return default if got_env is None or got_env == "" else ge(env)
+    got_env = False if got_env and got_env.lower() == "false" else got_env
+    got_env = True if got_env and got_env.lower() == "true" else got_env
+    return default if got_env is None or got_env == "" else got_env
 
 
 #########################################
@@ -28,7 +28,7 @@ DATABASES = {
         'NAME': getenv("DB_NAME", "taiga"),
         'USER': getenv("DB_USER", "taiga"),
         'PASSWORD': getenv("DB_PASSWORD", "taiga"),
-        'HOST': getenv("DB_HOST", "postgres"),
+        'HOST': getenv("DB_HOST", "taiga-db"),
         'PORT': getenv("DB_PORT", "5432"),
     }
 }
